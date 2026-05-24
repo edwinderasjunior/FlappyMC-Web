@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   web-deploy:
     name: Build and Deploy
@@ -22,13 +23,13 @@ jobs:
       - name: Build game
         run: pygbag --build main.py
 
-      - name: Sync Files to Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SFTP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./build/web/
-          server-dir: /flappymc/
           port: 2222
-          protocol: ftps
+          source: ./build/web/*
+          target: /public_html/flappymc/
+          strip_components: 3
