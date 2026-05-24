@@ -1,0 +1,31 @@
+name: Build and Deploy FlappyMC
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install pygbag
+        run: pip install pygbag
+
+      - name: Build game
+        run: pygbag --build main.py
+
+      - name: Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: edwinjr.com
+          username: flappymc@edwinjr.com
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./build/web/
+          server-dir: /public_html/game/
