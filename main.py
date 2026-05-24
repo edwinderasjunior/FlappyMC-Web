@@ -210,6 +210,24 @@ def is_web():
     return False
 
 
+def quit_to_site():
+    """
+    On web: redirects the browser to edwinjr.com.
+    On desktop: quits pygame and exits.
+    """
+    if is_web():
+        try:
+            import js  # type: ignore
+            js.window.location.href = "https://edwinjr.com"
+        except Exception as e:
+            print(f"Redirect failed: {e}")
+            pygame.quit()
+            sys.exit()
+    else:
+        pygame.quit()
+        sys.exit()
+
+
 SKIN_FETCH_ERROR = ""  # surfaced on the input screen so failures are visible without a terminal
 
 
@@ -585,9 +603,9 @@ async def main():
                             options_source = "MENU"
                             options_active = True
                         elif menu_quit_button.collidepoint(event.pos):
+                            # ── QUIT from main menu → back to edwinjr.com ──
                             play_click(click_sound)
-                            pygame.quit()
-                            sys.exit()
+                            quit_to_site()
 
             elif game_over_active:
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -638,9 +656,9 @@ async def main():
                             menu_active = True
 
                         elif exit_button.collidepoint(event.pos):
+                            # ── QUIT from game over screen → back to edwinjr.com ──
                             play_click(click_sound)
-                            pygame.quit()
-                            sys.exit()
+                            quit_to_site()
                     
             elif waiting_active:
                 if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE) or \
