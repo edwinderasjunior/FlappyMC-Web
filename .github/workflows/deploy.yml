@@ -29,6 +29,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/web/
-          server-dir: /public_html/flappymc/
+          server-dir: ./public_html/flappymc/
           port: 21
           protocol: ftps
